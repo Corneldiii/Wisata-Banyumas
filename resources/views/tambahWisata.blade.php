@@ -23,7 +23,7 @@
 
     <!-- Navbar -->
     <nav class="navbar navbar-expand-lg navbar-light bg-light fixed-top shadow">
-        <a class="navbar-brand" href="/admin">
+        <a class="navbar-brand" href="{{ route('homeAdmin') }}">
             <img src="/storage/img/admin/dashboard/logoSIG.png" style="width: 30px; border: none" alt="">
         </a>
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav"
@@ -33,10 +33,10 @@
         <div class="collapse navbar-collapse" id="navbarNav">
             <ul class="navbar-nav mr-auto">
                 <li class="nav-item active">
-                    <a class="nav-link" href="/admin">Dashboard </a>
+                    <a class="nav-link" href="{{ route('homeAdmin') }}">Dashboard </a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="#">Daftar Wisata</a>
+                    <a class="nav-link" href="{{ route('daftar_wisata') }}">Daftar Wisata</a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" href="#">Tambah Wisata <span class="sr-only">(current)</span></a>

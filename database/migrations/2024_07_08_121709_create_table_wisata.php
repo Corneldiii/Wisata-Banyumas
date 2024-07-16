@@ -6,7 +6,7 @@ use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
-    /**
+    /** 
      * Run the migrations.
      */
     public function up(): void
@@ -17,8 +17,8 @@ return new class extends Migration
             $table->string('alamat');
             $table->text('deskripsi');
             $table->decimal('harga_tiket');
-            $table->decimal('latitude');
-            $table->decimal('longitude');
+            $table->decimal('latitude',20,15);
+            $table->decimal('longitude',20,15);
             $table->string('foto'); 
             $table->timestamps();
         });

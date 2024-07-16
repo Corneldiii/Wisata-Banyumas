@@ -3,7 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Models\Wisata;
+use App\Models\reservasi;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class reservasiController extends Controller
 {
@@ -12,14 +14,17 @@ class reservasiController extends Controller
      */
     public function index(Request $request)
     {
-        $id = $request->query('id');
-        $nama = $request->query('nama');
-        $harga = $request->query('harga');
-        $alamat = $request->query('alamat');
-        $deskripsi = $request->query('deskripsi');
-        $foto = $request->query('foto');
-
-        return view('reservasi',compact('id', 'nama', 'harga', 'alamat','deskripsi', 'foto'));
+        if (Auth::user()->role === 'user') {
+            $id = $request->query('id');
+            $nama = $request->query('nama');
+            $harga = $request->query('harga');
+            $alamat = $request->query('alamat');
+            $deskripsi = $request->query('deskripsi');
+            $foto = $request->query('foto');
+            $userId = Auth::id();
+            return view('reservasi', compact('id', 'nama', 'harga', 'alamat', 'deskripsi', 'foto', 'userId'));
+        }
+        return redirect()->route('index');
     }
 
     /**
@@ -35,7 +40,27 @@ class reservasiController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        // dd($request);
+        $request->validate([
+            'nama' => 'required|string|max:255',
+            'tanggal' => 'required|date',
+            'visitor' => 'required|integer',
+            'total_harga' => 'required|numeric',
+            'id_akun' => 'required|exists:users,id',
+        ]);
+
+        $reservasi = [
+            'nama' => $request->input('nama'),
+            'tanggal' => $request->input('tanggal'),
+            'visitor' => $request->input('visitor'),
+            'total_harga' => $request->input('total_harga'),
+            'id_wisata' => $request->input('id_wisata'),
+            'id_akun' => $request->input('id_akun'),
+        ];
+
+        reservasi::create($reservasi);
+
+        return redirect()->route('index')->with('reservasi_success', 'Reservasi berhasil disimpan');
     }
 
     /**
@@ -69,5 +94,4 @@ class reservasiController extends Controller
     {
         //
     }
-
 }
