@@ -23,7 +23,7 @@
 
     <!-- Navbar -->
     <nav class="navbar navbar-expand-lg navbar-light bg-light fixed-top shadow">
-        <a class="navbar-brand" href="{{ route('homeAdmin') }}">
+        <a class="navbar-brand" href="#">
             <img src="/storage/img/admin/dashboard/logoSIG.png" style="width: 30px; border: none" alt="">
         </a>
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav"
@@ -44,10 +44,11 @@
             </ul>
             <ul class="navbar-nav ml-auto">
                 <li class="nav-item">
-                    <a class="nav-link" href="#">
-                        <img src="/path/to/profile-pic.jpg" alt="Profile Picture" class="rounded-circle" width="30"
-                            height="30">
-                        Nama Akun
+                    <a class="nav-link  d-flex justify-content-center align-items-center" href="#"
+                        style="background: none; border: none;">
+                        <img src="{{ $profil->foto_akun }}" alt="Profile Picture" class="rounded-circle mr-3"
+                            width="30" height="30">
+                        <p class="mb-0">{{ $profil->email }}</p>
                     </a>
                 </li>
             </ul>

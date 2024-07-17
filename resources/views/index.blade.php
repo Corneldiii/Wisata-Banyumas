@@ -193,19 +193,6 @@
             background-color: #242525;
         }
 
-        #transport {
-            transform: translateY(1px);
-            transition: transform 0.5s ease-in-out, background 0.3s ease-in-out;
-            cursor: pointer;
-            border: #7d7d7d;
-            border-style: solid;
-        }
-
-        #transport:hover {
-            background: #a8a9a9;
-            transform: translateY(5px);
-        }
-
         #icons {
             transform: translateY(0px);
             transition: color 0.4s ease-in-out, transform 0.4s ease-in-out;
@@ -219,6 +206,53 @@
         .copyright {
             width: 100%;
             text-align: center;
+        }
+
+        .radio-container {
+            position: relative;
+            width: 50px;
+            height: 50px;
+            display: inline-block;
+        }
+
+        .radio-container input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .checkmark {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 75%;
+            height: 75%;
+            background-color: #d8d5d5;
+            border-radius: 50%;
+            transform: translateY(1px);
+            transition: transform 0.5s ease-in-out, background 0.3s ease-in-out;
+            cursor: pointer;
+            border: #a8a8a8;
+            border-style: solid;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+        }
+
+        .checkmark:hover {
+            background: #2196F3;
+            transform: translateY(5px);
+        }
+
+        .radio-container input:checked+.checkmark {
+            background-color: #2196F3;
+        }
+
+        .radio-container .fa,
+        .radio-container .bi {
+            color: #fff;
+            font-size: 24px;
         }
     </style>
 </head>
@@ -265,7 +299,7 @@
                                             </svg> Log Out</button>
                                     </form>
                                 </li>
-                                <li><a class="dropdown-item" href="{{ route('reservasi') }}">Reservasi Anda</a></li>
+                                <li><a class="dropdown-item" href="{{ route('pesanan_reservasi') }}">Reservasi Anda</a></li>
                             </ul>
                         </li>
                     @else
@@ -290,11 +324,29 @@
                     </button>
                 </div>
                 <div class="toast-body">
-                    Reservasi berhasil disimpan
+                    {{ session('reservasi_success') }}
                 </div>
             </div>
         </div>
     @endif
+    @if (session('login_success'))
+        <div class="toast-container position-fixed top-0 end-0 p-3">
+            <div class="toast" role="alert" aria-live="assertive" aria-atomic="true">
+                <div class="toast-header" style="display: flex; justify-content: space-around;">
+                    <strong class="mr-auto">Success</strong>
+                    <small>Just now</small>
+                    <button type="button" class="ml-2 mb-1 close" style="border: none; background: none;"
+                        data-dismiss="toast" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="toast-body">
+                    {{ session('login_success') }}
+                </div>
+            </div>
+        </div>
+    @endif
+
 
 
     <div class="jumbotron jumbotron-fluid d-flex align-items-center justify-content-end">
@@ -374,12 +426,13 @@
         <h2 class="m-2"><strong>Peta Lokasi Wisata</strong></h2>
 
         <div id="map-container" style="overflow: hidden;"
-            class="container rounded shadow row bg-light d-flex justify-content-center align-items-center">
+            class="container rounded shadow row bg-light d-flex justify-content-center align-items-center p-4">
             <div class="col p-2 d-flex flex-column justify-content-center align-items-center ">
                 <img src="" id="fotoCard" class="img img-thumbnail rounded-bottom"
                     style="width: 450px; height: 200px;" alt="Tour Image 1">
                 <h5 class="text-center mt-2" id="titleCard">baturaden</h5>
                 <div class="text-start d-flex flex-column gap-3">
+
                     <small>
                         Lorem ipsum, dolor sit amet consectetur adipisicing elit. Corporis doloremque ad maiores!
                         Doloremque
@@ -393,56 +446,61 @@
                     <small>
                         harga tiket
                     </small>
-                    <div id="jenis-kendaraan" class="w-50 d-flex gap-3">
-                        <div id="transport"
-                            class="p-2 rounded-circle d-flex justify-content-center align-items-center">
-                            <i class="fas fa-motorcycle"></i>
-                        </div>
-                        <div id="transport"
-                            class="p-2 rounded-circle d-flex justify-content-center align-items-center">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
-                                fill="currentColor" class="bi bi-bus-front" viewBox="0 0 16 16">
-                                <path
-                                    d="M5 11a1 1 0 1 1-2 0 1 1 0 0 1 2 0m8 0a1 1 0 1 1-2 0 1 1 0 0 1 2 0m-6-1a1 1 0 1 0 0 2h2a1 1 0 1 0 0-2zm1-6c-1.876 0-3.426.109-4.552.226A.5.5 0 0 0 3 4.723v3.554a.5.5 0 0 0 .448.497C4.574 8.891 6.124 9 8 9s3.426-.109 4.552-.226A.5.5 0 0 0 13 8.277V4.723a.5.5 0 0 0-.448-.497A44 44 0 0 0 8 4m0-1c-1.837 0-3.353.107-4.448.22a.5.5 0 1 1-.104-.994A44 44 0 0 1 8 2c1.876 0 3.426.109 4.552.226a.5.5 0 1 1-.104.994A43 43 0 0 0 8 3" />
-                                <path
-                                    d="M15 8a1 1 0 0 0 1-1V5a1 1 0 0 0-1-1V2.64c0-1.188-.845-2.232-2.064-2.372A44 44 0 0 0 8 0C5.9 0 4.208.136 3.064.268 1.845.408 1 1.452 1 2.64V4a1 1 0 0 0-1 1v2a1 1 0 0 0 1 1v3.5c0 .818.393 1.544 1 2v2a.5.5 0 0 0 .5.5h2a.5.5 0 0 0 .5-.5V14h6v1.5a.5.5 0 0 0 .5.5h2a.5.5 0 0 0 .5-.5v-2c.607-.456 1-1.182 1-2zM8 1c2.056 0 3.71.134 4.822.261.676.078 1.178.66 1.178 1.379v8.86a1.5 1.5 0 0 1-1.5 1.5h-9A1.5 1.5 0 0 1 2 11.5V2.64c0-.72.502-1.301 1.178-1.379A43 43 0 0 1 8 1" />
-                            </svg>
-                        </div>
-                        <div id="transport"
-                            class="p-2 rounded-circle d-flex justify-content-center align-items-center" ">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
-                                fill="currentColor" class="bi bi-car-front" viewBox="0 0 16 16">
-                                <path
-                                    d=" M4 9a1 1 0 1 1-2 0 1 1 0 0 1 2 0m10 0a1 1 0 1 1-2 0 1 1 0 0 1 2 0M6 8a1 1 0 0 0
-                            0 2h4a1 1 0 1 0 0-2zM4.862 4.276 3.906 6.19a.51.51 0 0 0 .497.731c.91-.073 2.35-.17
-                            3.597-.17s2.688.097 3.597.17a.51.51 0 0 0 .497-.731l-.956-1.913A.5.5 0 0 0 10.691
-                            4H5.309a.5.5 0 0 0-.447.276" />
-                        <path
-                            d="M2.52 3.515A2.5 2.5 0 0 1 4.82 2h6.362c1 0 1.904.596 2.298 1.515l.792 1.848c.075.175.21.319.38.404.5.25.855.715.965 1.262l.335 1.679q.05.242.049.49v.413c0 .814-.39 1.543-1 1.997V13.5a.5.5 0 0 1-.5.5h-2a.5.5 0 0 1-.5-.5v-1.338c-1.292.048-2.745.088-4 .088s-2.708-.04-4-.088V13.5a.5.5 0 0 1-.5.5h-2a.5.5 0 0 1-.5-.5v-1.892c-.61-.454-1-1.183-1-1.997v-.413a2.5 2.5 0 0 1 .049-.49l.335-1.68c.11-.546.465-1.012.964-1.261a.8.8 0 0 0 .381-.404l.792-1.848ZM4.82 3a1.5 1.5 0 0 0-1.379.91l-.792 1.847a1.8 1.8 0 0 1-.853.904.8.8 0 0 0-.43.564L1.03 8.904a1.5 1.5 0 0 0-.03.294v.413c0 .796.62 1.448 1.408 1.484 1.555.07 3.786.155 5.592.155s4.037-.084 5.592-.155A1.48 1.48 0 0 0 15 9.611v-.413q0-.148-.03-.294l-.335-1.68a.8.8 0 0 0-.43-.563 1.8 1.8 0 0 1-.853-.904l-.792-1.848A1.5 1.5 0 0 0 11.18 3z" />
-                        </svg>
-                    </div>
-                </div>
-                <button class="btn btn-primary w-25" type="button" id="get-location">
-                    Google Maps
-                </button>
-            </div>
-        </div>
-        <div class="col">
+                    <div id="jenis-kendaraan" class="w-50 d-flex gap-1" style="margin-bottom: -17px;">
+                        <label class="radio-container">
+                            <input type="radio" name="transport" value="driving">
+                            <span class="checkmark">
+                                <i class="fas fa-motorcycle" style="color: rgb(49, 49, 49);"></i>
+                            </span>
+                        </label>
 
-        </div>
-        <div id="map" style="width:1100px;height:480px; position: absolute;" class="m-3 rounded shadow-lg">
-        </div>
+                        <label class="radio-container">
+                            <input type="radio" name="transport" value="transit">
+                            <span class="checkmark">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+                                    fill="currentColor" class="bi bi-bus-front" style="color: rgb(49, 49, 49);"
+                                    viewBox="0 0 16 16">
+                                    <path
+                                        d="M5 11a1 1 0 1 1-2 0 1 1 0 0 1 2 0m8 0a1 1 0 1 1-2 0 1 1 0 0 1 2 0m-6-1a1 1 0 1 0 0 2h2a1 1 0 1 0 0-2zm1-6c-1.876 0-3.426.109-4.552.226A.5.5 0 0 0 3 4.723v3.554a.5.5 0 0 0 .448.497C4.574 8.891 6.124 9 8 9s3.426-.109 4.552-.226A.5.5 0 0 0 13 8.277V4.723a.5.5 0 0 0-.448-.497A44 44 0 0 0 8 4m0-1c-1.837 0-3.353.107-4.448.22a.5.5 0 1 1-.104-.994A44 44 0 0 1 8 2c1.876 0 3.426.109 4.552.226a.5.5 0 1 1-.104.994A43 43 0 0 0 8 3" />
+                                    <path
+                                        d="M15 8a1 1 0 0 0 1-1V5a1 1 0 0 0-1-1V2.64c0-1.188-.845-2.232-2.064-2.372A44 44 0 0 0 8 0C5.9 0 4.208.136 3.064.268 1.845.408 1 1.452 1 2.64V4a1 1 0 0 0-1 1v2a1 1 0 0 0 1 1v3.5c0 .818.393 1.544 1 2v2a.5.5 0 0 0 .5.5h2a.5.5 0 0 0 .5-.5V14h6v1.5a.5.5 0 0 0 .5.5h2a.5.5 0 0 0 .5-.5v-2c.607-.456 1-1.182 1-2zM8 1c2.056 0 3.71.134 4.822.261.676.078 1.178.66 1.178 1.379v8.86a1.5 1.5 0 0 1-1.5 1.5h-9A1.5 1.5 0 0 1 2 11.5V2.64c0-.72.502-1.301 1.178-1.379A43 43 0 0 1 8 1" />
+                                </svg>
+                            </span>
+                        </label>
+
+                        <label class="radio-container">
+                            <input type="radio" name="transport" value="driving">
+                            <span class="checkmark">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+                                    fill="currentColor" style="color: rgb(49, 49, 49);" class="bi bi-car-front"
+                                    viewBox="0 0 16 16">
+                                    <path
+                                        d="M4 9a1 1 0 1 1-2 0 1 1 0 0 1 2 0m10 0a1 1 0 1 1-2 0 1 1 0 0 1 2 0M6 8a1 1 0 0 0 0 2h4a1 1 0 1 0 0-2zM4.862 4.276 3.906 6.19a.51.51 0 0 0 .497.731c.91-.073 2.35-.17 3.597-.17s2.688.097 3.597.17a.51.51 0 0 0 .497-.731l-.956-1.913A.5.5 0 0 0 10.691 4H5.309a.5.5 0 0 0-.447.276" />
+                                    <path
+                                        d="M2.52 3.515A2.5 2.5 0 0 1 4.82 2h6.362c1 0 1.904.596 2.298 1.515l.792 1.848c.075.175.21.319.38.404.5.25.855.715.965 1.262l.335 1.679q.05.242.049.49v.413c0 .814-.39 1.543-1 1.997V13.5a.5.5 0 0 1-.5.5h-2a.5.5 0 0 1-.5-.5v-1.338c-1.292.048-2.745.088-4 .088s-2.708-.04-4-.088V13.5a.5.5 0 0 1-.5.5h-2a.5.5 0 0 1-.5-.5v-1.892c-.61-.454-1-1.183-1-1.997v-.413a2.5 2.5 0 0 1 .049-.49l.335-1.68c.11-.546.465-1.012.964-1.261a.8.8 0 0 0 .381-.404l.792-1.848ZM4.82 3a1.5 1.5 0 0 0-1.379.91l-.792 1.847a1.8 1.8 0 0 1-.853.904.8.8 0 0 0-.43.564L1.03 8.904a1.5 1.5 0 0 0-.03.294v.413c0 .796.62 1.448 1.408 1.484 1.555.07 3.786.155 5.592.155s4.037-.084 5.592-.155A1.48 1.48 0 0 0 15 9.611v-.413q0-.148-.03-.294l-.335-1.68a.8.8 0 0 0-.43-.563 1.8 1.8 0 0 1-.853-.904l-.792-1.848A1.5 1.5 0 0 0 11.18 3z" />
+                                </svg>
+                            </span>
+                        </label>
+                    </div>
+                    <button class="btn btn-primary w-25" type="button" id="get-location">
+                        Google Maps
+                    </button>
+                </div>
+            </div>
+            <div class="col">
+
+            </div>
+            <div id="map" style="width:1100px;height:480px; position: absolute;" class="m-3 rounded shadow-lg">
+            </div>
 
         </div>
         <div class="container d-flex flex-column justify-content-center align-items-center">
             <div class="row m-5">
                 <div class="col d-flex flex-column justify-content-center align-items-center">
                     <h2 class="text-light"><strong>Jangkauan Peta</strong></h2>
-                    <p class="w-75 text-light">Lorem ipsum dolor sit amet consectetur adipisicing elit. Itaque,
-                        reprehenderit
-                        libero earum expedita
-                        omnis accusamus iste sit. Vero soluta dolores nostrum maiores. Dignissimos corporis repudiandae
-                        placeat, sapiente soluta odio molestias.</p>
+                    <p class="w-75 text-light">Aplikasi pemetaan geografis Wisata di kabupaten Banyumas ini memuat
+                        informasi dan lokasi dari Wisata Alam dan Wisata Kuliner di Banyumas. Pemetaan diambil dari data
+                        lokasi Google Maps dan data dari website masing-masing tempat wisata.</p>
                 </div>
             </div>
             <div class="row m-5">
@@ -536,25 +594,28 @@
                     <div class="col">
                         <h4 class="text-center mb-3"><strong>Follow</strong></h4>
                         <div class="d-flex justify-content-center gap-4 mb-5">
-                            <svg id="icons" xmlns="http://www.w3.org/2000/svg" width="26" height="26"
-                                fill="currentColor" class="bi bi-instagram" viewBox="0 0 16 16">
-                                <path
-                                    d="M8 0C5.829 0 5.556.01 4.703.048 3.85.088 3.269.222 2.76.42a3.9 3.9 0 0 0-1.417.923A3.9 3.9 0 0 0 .42 2.76C.222 3.268.087 3.85.048 4.7.01 5.555 0 5.827 0 8.001c0 2.172.01 2.444.048 3.297.04.852.174 1.433.372 1.942.205.526.478.972.923 1.417.444.445.89.719 1.416.923.51.198 1.09.333 1.942.372C5.555 15.99 5.827 16 8 16s2.444-.01 3.298-.048c.851-.04 1.434-.174 1.943-.372a3.9 3.9 0 0 0 1.416-.923c.445-.445.718-.891.923-1.417.197-.509.332-1.09.372-1.942C15.99 10.445 16 10.173 16 8s-.01-2.445-.048-3.299c-.04-.851-.175-1.433-.372-1.941a3.9 3.9 0 0 0-.923-1.417A3.9 3.9 0 0 0 13.24.42c-.51-.198-1.092-.333-1.943-.372C10.443.01 10.172 0 7.998 0zm-.717 1.442h.718c2.136 0 2.389.007 3.232.046.78.035 1.204.166 1.486.275.373.145.64.319.92.599s.453.546.598.92c.11.281.24.705.275 1.485.039.843.047 1.096.047 3.231s-.008 2.389-.047 3.232c-.035.78-.166 1.203-.275 1.485a2.5 2.5 0 0 1-.599.919c-.28.28-.546.453-.92.598-.28.11-.704.24-1.485.276-.843.038-1.096.047-3.232.047s-2.39-.009-3.233-.047c-.78-.036-1.203-.166-1.485-.276a2.5 2.5 0 0 1-.92-.598 2.5 2.5 0 0 1-.6-.92c-.109-.281-.24-.705-.275-1.485-.038-.843-.046-1.096-.046-3.233s.008-2.388.046-3.231c.036-.78.166-1.204.276-1.486.145-.373.319-.64.599-.92s.546-.453.92-.598c.282-.11.705-.24 1.485-.276.738-.034 1.024-.044 2.515-.045zm4.988 1.328a.96.96 0 1 0 0 1.92.96.96 0 0 0 0-1.92m-4.27 1.122a4.109 4.109 0 1 0 0 8.217 4.109 4.109 0 0 0 0-8.217m0 1.441a2.667 2.667 0 1 1 0 5.334 2.667 2.667 0 0 1 0-5.334" />
-                            </svg>
+                            <a href="https://www.instagram.com/carissarhmp?utm_source=ig_web_button_share_sheet&igsh=ZDNlZDc0MzIxNw==" style="color: #000;"> 
+                                <svg id="icons" xmlns="http://www.w3.org/2000/svg" width="26" height="26"
+                                    fill="currentColor" class="bi bi-instagram" viewBox="0 0 16 16">
+                                    <path
+                                        d="M8 0C5.829 0 5.556.01 4.703.048 3.85.088 3.269.222 2.76.42a3.9 3.9 0 0 0-1.417.923A3.9 3.9 0 0 0 .42 2.76C.222 3.268.087 3.85.048 4.7.01 5.555 0 5.827 0 8.001c0 2.172.01 2.444.048 3.297.04.852.174 1.433.372 1.942.205.526.478.972.923 1.417.444.445.89.719 1.416.923.51.198 1.09.333 1.942.372C5.555 15.99 5.827 16 8 16s2.444-.01 3.298-.048c.851-.04 1.434-.174 1.943-.372a3.9 3.9 0 0 0 1.416-.923c.445-.445.718-.891.923-1.417.197-.509.332-1.09.372-1.942C15.99 10.445 16 10.173 16 8s-.01-2.445-.048-3.299c-.04-.851-.175-1.433-.372-1.941a3.9 3.9 0 0 0-.923-1.417A3.9 3.9 0 0 0 13.24.42c-.51-.198-1.092-.333-1.943-.372C10.443.01 10.172 0 7.998 0zm-.717 1.442h.718c2.136 0 2.389.007 3.232.046.78.035 1.204.166 1.486.275.373.145.64.319.92.599s.453.546.598.92c.11.281.24.705.275 1.485.039.843.047 1.096.047 3.231s-.008 2.389-.047 3.232c-.035.78-.166 1.203-.275 1.485a2.5 2.5 0 0 1-.599.919c-.28.28-.546.453-.92.598-.28.11-.704.24-1.485.276-.843.038-1.096.047-3.232.047s-2.39-.009-3.233-.047c-.78-.036-1.203-.166-1.485-.276a2.5 2.5 0 0 1-.92-.598 2.5 2.5 0 0 1-.6-.92c-.109-.281-.24-.705-.275-1.485-.038-.843-.046-1.096-.046-3.233s.008-2.388.046-3.231c.036-.78.166-1.204.276-1.486.145-.373.319-.64.599-.92s.546-.453.92-.598c.282-.11.705-.24 1.485-.276.738-.034 1.024-.044 2.515-.045zm4.988 1.328a.96.96 0 1 0 0 1.92.96.96 0 0 0 0-1.92m-4.27 1.122a4.109 4.109 0 1 0 0 8.217 4.109 4.109 0 0 0 0-8.217m0 1.441a2.667 2.667 0 1 1 0 5.334 2.667 2.667 0 0 1 0-5.334" />
+                                </svg>
+                            </a>
 
-                            <svg id="icons" xmlns="http://www.w3.org/2000/svg" width="26" height="26"
+
+                            <svg id="icons" xmlns="http://www.w3.org/2000/svg" style="color: #000;" width="26" height="26"
                                 fill="currentColor" class="bi bi-facebook" viewBox="0 0 16 16">
                                 <path
                                     d="M16 8.049c0-4.446-3.582-8.05-8-8.05C3.58 0-.002 3.603-.002 8.05c0 4.017 2.926 7.347 6.75 7.951v-5.625h-2.03V8.05H6.75V6.275c0-2.017 1.195-3.131 3.022-3.131.876 0 1.791.157 1.791.157v1.98h-1.009c-.993 0-1.303.621-1.303 1.258v1.51h2.218l-.354 2.326H9.25V16c3.824-.604 6.75-3.934 6.75-7.951" />
                             </svg>
 
-                            <svg id="icons" xmlns="http://www.w3.org/2000/svg" width="26" height="26"
+                            <svg id="icons" xmlns="http://www.w3.org/2000/svg" style="color: #000;" width="26" height="26"
                                 fill="currentColor" class="bi bi-twitter" viewBox="0 0 16 16">
                                 <path
                                     d="M5.026 15c6.038 0 9.341-5.003 9.341-9.334q.002-.211-.006-.422A6.7 6.7 0 0 0 16 3.542a6.7 6.7 0 0 1-1.889.518 3.3 3.3 0 0 0 1.447-1.817 6.5 6.5 0 0 1-2.087.793A3.286 3.286 0 0 0 7.875 6.03a9.32 9.32 0 0 1-6.767-3.429 3.29 3.29 0 0 0 1.018 4.382A3.3 3.3 0 0 1 .64 6.575v.045a3.29 3.29 0 0 0 2.632 3.218 3.2 3.2 0 0 1-.865.115 3 3 0 0 1-.614-.057 3.28 3.28 0 0 0 3.067 2.277A6.6 6.6 0 0 1 .78 13.58a6 6 0 0 1-.78-.045A9.34 9.34 0 0 0 5.026 15" />
                             </svg>
 
-                            <svg id="icons" xmlns="http://www.w3.org/2000/svg" width="26" height="26"
+                            <svg id="icons" xmlns="http://www.w3.org/2000/svg" style="color: #000;" width="26" height="26"
                                 fill="currentColor" class="bi bi-tiktok" viewBox="0 0 16 16">
                                 <path
                                     d="M9 0h1.98c.144.715.54 1.617 1.235 2.512C12.895 3.389 13.797 4 15 4v2c-1.753 0-3.07-.814-4-1.829V11a5 5 0 1 1-5-5v2a3 3 0 1 0 3 3z" />
@@ -672,14 +733,15 @@
                 navigator.geolocation.getCurrentPosition(function(position) {
                     var userLat = position.coords.latitude;
                     var userLng = position.coords.longitude;
-                    alert('User coordinates: Latitude: ' + userLat +
-                        ', Longitude: ' + userLng);
+                    // alert('User coordinates: Latitude: ' + userLat +
+                    //     ', Longitude: ' + userLng);
+                    var transportMode = document.querySelector('input[name="transport"]:checked').value;
 
-                    // const googleMapsUrl =
-                    //     `https://www.google.com/maps/dir/?api=1&origin=${userLat},${userLng}&destination=${-7.3098379612518105},${109.2396601746585}&travelmode=driving`;
+                    const googleMapsUrl =
+                        `https://www.google.com/maps/dir/?api=1&origin=${userLat},${userLng}&destination=-7.3098379612518105,109.2396601746585&travelmode=${transportMode}`;
 
 
-                    // window.open(googleMapsUrl, '_blank');
+                    window.open(googleMapsUrl, '_blank');
                 }, function(error) {
                     handleLocationError(error);
                 });
@@ -709,8 +771,6 @@
         }
 
 
-
-        // Scroll Animation
         window.addEventListener('scroll', function() {
             const thumbnails = document.querySelectorAll('#box');
             thumbnails.forEach(img => {

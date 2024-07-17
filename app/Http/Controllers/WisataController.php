@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Models\Wisata;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Auth;
 
 class WisataController extends Controller
 {
@@ -12,7 +14,12 @@ class WisataController extends Controller
      */
     public function index()
     {
-        return view('/tambahWisata');
+        $profil = DB::table('profil')
+            ->join('users', 'profil.id_akun', '=', 'users.id')
+            ->where('profil.id_akun', Auth::user()->id)
+            ->first();
+            
+        return view('/tambahWisata',compact('profil'));
     }
 
     /**

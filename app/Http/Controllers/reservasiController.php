@@ -14,7 +14,7 @@ class reservasiController extends Controller
      */
     public function index(Request $request)
     {
-        if (Auth::user()->role === 'user') {
+        if (Auth::check() && Auth::user()->role === 'user' || !Auth::check()) {
             $id = $request->query('id');
             $nama = $request->query('nama');
             $harga = $request->query('harga');
@@ -23,8 +23,9 @@ class reservasiController extends Controller
             $foto = $request->query('foto');
             $userId = Auth::id();
             return view('reservasi', compact('id', 'nama', 'harga', 'alamat', 'deskripsi', 'foto', 'userId'));
-        }
-        return redirect()->route('index');
+        } else {
+            return redirect()->route('index');
+        }        
     }
 
     /**

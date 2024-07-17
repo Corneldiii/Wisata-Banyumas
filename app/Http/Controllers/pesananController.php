@@ -2,26 +2,25 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Wisata;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 
-class daftarController extends Controller
+class pesananController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
     public function index()
     {
-         $data = Wisata::paginate(10);
-        //  dd($data);
-        $profil = DB::table('profil')
-            ->join('users', 'profil.id_akun', '=', 'users.id')
-            ->where('profil.id_akun', Auth::user()->id)
-            ->first();
 
-        return view('daftarWisata',compact('data','profil'));
+        $data = DB::table('reservasi')
+            ->join('table_wisata', 'reservasi.id_wisata', '=', 'table_wisata.id')
+            ->where('reservasi.id_akun', Auth::id())
+            ->get();
+
+
+        return view('pesanan', compact('data'));
     }
 
     /**
@@ -61,19 +60,14 @@ class daftarController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        $wisata = Wisata::findOrFail($id);
-        $wisata->update($request->all());
-        return redirect()->back()->with('success', 'Data updated successfully');
+        //
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Request $request)
+    public function destroy(string $id)
     {
-        DB::table('table_wisata')
-        -> where('id',$request->input('id'))
-        -> delete();
-        return redirect()->back()->with('success', 'Data deleted successfully');
+        //
     }
 }

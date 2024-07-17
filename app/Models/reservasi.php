@@ -19,4 +19,6 @@ class reservasi extends Model
         'id_wisata',
         'id_akun'
     ];
+
+    
 }

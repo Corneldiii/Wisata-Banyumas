@@ -39,6 +39,7 @@ class SignUpController extends Controller
             'email' => $request->input('emailSign'),
             'password' => bcrypt($request->input('passwordSign')),
         ];
+        
 
         User::create($data);
 

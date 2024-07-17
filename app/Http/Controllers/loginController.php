@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\profile;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -73,12 +74,25 @@ class loginController extends Controller
 
         if (Auth::attempt($credentials)) {
             $request->session()->regenerate();
+            // dd(Auth::user()->id);
+
+
+            $cekprofil = profile::where('id_akun', Auth::user()->id)->get();
+
+            // dd($cekprofil);
+
+            if($cekprofil->count() == 0){
+                $profil = [
+                    'id_akun' => Auth::user()->id,
+                ];
+
+                profile::create($profil);
+            }
     
-            // Memeriksa peran pengguna
             if (Auth::user()->role === 'admin') {
-                return redirect()->intended(route('homeAdmin'));
+                return redirect()->intended(route('homeAdmin'))->with('login_success','Welcome admin,'.Auth::user()->email).'!';
             } else {
-                return redirect()->intended(route('index'));
+                return redirect()->intended(route('index'))->with('login_success','Welcome,'.Auth::user()->email).'!';
             }
         }
         // dd('gagal');
